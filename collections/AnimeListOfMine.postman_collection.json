@@ -96,6 +96,50 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "getAnimeByName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/animes/find?name=Spy Family",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"animes",
+						"find"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Spy Family"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAnimeById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/animes/5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"animes",
+						"5"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
