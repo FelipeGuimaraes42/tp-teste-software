@@ -19,9 +19,13 @@ public class Anime {
   @JsonProperty("name")
   private String name;
 
-  public Anime(Long id, String name) {
+  @JsonProperty("score")
+  private Double score;
+
+  public Anime(Long id, String name, Double score) {
     this.id = id;
     this.name = name;
+    this.score = score;
   }
 
   public Anime() {
@@ -42,6 +46,14 @@ public class Anime {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Double getScore() {
+    return score;
+  }
+
+  public void setScore(Double score) {
+    this.score = score;
   }
 
   @Override
