@@ -61,8 +61,8 @@ public class AnimeController {
     return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
   }
 
-  @DeleteMapping(path = "/{id}")
-  public ResponseEntity<Void> delete(@PathVariable long id) {
+  @DeleteMapping
+  public ResponseEntity<Void> delete(@RequestParam long id) {
     animeService.delete(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
