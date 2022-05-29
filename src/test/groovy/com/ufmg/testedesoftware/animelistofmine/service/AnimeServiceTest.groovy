@@ -229,4 +229,66 @@ class AnimeServiceTest extends Specification {
         assert animePage.toList().get(0) == savedAnime0
         assert animePage.toList().get(1) == savedAnime1
     }
+
+    def "it should return the first page of animes saved in data base successfully"() {
+        given:
+        Anime savedAnime0 = createAnime()
+        Anime savedAnime1 = createAnime(2L, "Sailor Moon", 9.0)
+        def databaseAnimes = [savedAnime0, savedAnime1]
+        def repositoryResponsePageZeroSizeOne = new PageImpl<Anime>([savedAnime0])
+        def page = PageRequest.of(0, 1)
+
+        when:
+        Page<Anime> animePage = animeService.list(page)
+
+        then:
+        1 * animeRepository.findAll(page) >> repositoryResponsePageZeroSizeOne
+
+        and: 'validate the method return'
+        assert ObjectUtils.isNotEmpty(animePage)
+        assert animePage.getTotalElements() != databaseAnimes.size()
+        assert animePage.getTotalElements() == 1L
+        assert animePage.toList().get(0) == savedAnime0
+    }
+
+    def "it should return the second page of animes saved in data base successfully"() {
+        given:
+        Anime savedAnime0 = createAnime()
+        Anime savedAnime1 = createAnime(2L, "Sailor Moon", 9.0)
+        def databaseAnimes = [savedAnime0, savedAnime1]
+        def repositoryResponsePageOneSizeOne = new PageImpl<Anime>([savedAnime1])
+        def page = PageRequest.of(1, 1)
+
+        when:
+        Page<Anime> animePage = animeService.list(page)
+
+        then:
+        1 * animeRepository.findAll(page) >> repositoryResponsePageOneSizeOne
+
+        and: 'validate the method return'
+        assert ObjectUtils.isNotEmpty(animePage)
+        assert animePage.getTotalElements() != databaseAnimes.size()
+        assert animePage.getTotalElements() == 1L
+        assert animePage.toList().get(0) == savedAnime1
+    }
+
+    def "it should return empty page when there is no anime in that page"() {
+        given:
+        Anime savedAnime0 = createAnime()
+        Anime savedAnime1 = createAnime(2L, "Sailor Moon", 9.0)
+        def databaseAnimes = [savedAnime0, savedAnime1]
+        def repositoryResponsePageTwentySizeOne = new PageImpl<Anime>(new ArrayList<>())
+        def page = PageRequest.of(20, 1)
+
+        when:
+        Page<Anime> animePage = animeService.list(page)
+
+        then:
+        1 * animeRepository.findAll(page) >> repositoryResponsePageTwentySizeOne
+
+        and: 'validate the method return'
+        assert ObjectUtils.isNotEmpty(animePage)
+        assert animePage.getTotalElements() != databaseAnimes.size()
+        assert animePage.getTotalElements() == 0L
+    }
 }
