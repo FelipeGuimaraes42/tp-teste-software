@@ -41,6 +41,9 @@ public class AnimeService {
 
   @Transactional
   public Anime save(AnimePostRequestBody animePostRequestBody) {
+    if (animePostRequestBody == null) {
+      throw new BadRequestException("Post Request Body cannot be null");
+    }
     return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
   }
 
