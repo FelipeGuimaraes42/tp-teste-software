@@ -37,6 +37,17 @@ class AnimeControllerTest {
   }
 
   @Test
+  void itShouldTestTheGETEndpointAnimesWithPageParametersSuccessfully() throws Exception {
+    LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+    requestParams.add("page", "0");
+    requestParams.add("size", "1");
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(ENDPOINT_ANIMES).params(requestParams))
+        .andExpect(status().isOk());
+  }
+
+  @Test
   void itShouldTestTheGETEndpointAnimesAllSuccessfully() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_ANIMES_ALL)).andExpect(status().isOk());
   }
