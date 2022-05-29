@@ -7,11 +7,10 @@ import com.ufmg.testedesoftware.animelistofmine.repository.AnimeRepository
 import com.ufmg.testedesoftware.animelistofmine.requests.AnimePostRequestBody
 import com.ufmg.testedesoftware.animelistofmine.requests.AnimePutRequestBody
 import org.apache.commons.lang3.ObjectUtils
-import org.springframework.data.domain.Sort
-import spock.lang.Specification
-
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import spock.lang.Specification
 
 import static com.ufmg.testedesoftware.animelistofmine.mock.AnimeMock.createAnime
 
@@ -19,11 +18,11 @@ class AnimeServiceTest extends Specification {
     AnimeService animeService
     AnimeRepository animeRepository = Mock()
 
-    def setup(){
+    def setup() {
         animeService = new AnimeService(animeRepository)
     }
 
-    def "it should save an anime in data base successfully"(){
+    def "it should save an anime in data base successfully"() {
         given:
         Anime savedAnime0 = createAnime()
         AnimePostRequestBody animePostRequestBody = new AnimePostRequestBody("Dragon Ball Z", 9.0)
@@ -40,7 +39,7 @@ class AnimeServiceTest extends Specification {
 
     }
 
-    def "it should throw an error when trying to save an anime with empty string"(){
+    def "it should throw an error when trying to save an anime with empty string"() {
         given:
         String expectedErrorMessage = "Post Request Body cannot be null"
 
@@ -53,7 +52,7 @@ class AnimeServiceTest extends Specification {
         assert exception.getMessage() == expectedErrorMessage
     }
 
-    def "it should return an anime in data base based on the name"(){
+    def "it should return an anime in data base based on the name"() {
         given:
         String animeName = "Sailor Moon"
         Anime savedAnime1 = createAnime(2L, animeName, 9.0)
@@ -71,7 +70,7 @@ class AnimeServiceTest extends Specification {
         assert listOfAnime.get(0) == savedAnime1
     }
 
-    def "it should return an empty list when trying to get an anime name not in the data base"(){
+    def "it should return an empty list when trying to get an anime name not in the data base"() {
         given:
         String animeName = "Sailor Moon"
 
@@ -85,7 +84,7 @@ class AnimeServiceTest extends Specification {
         assert ObjectUtils.isEmpty(listOfAnime)
     }
 
-    def "it should return all animes saved in data base successfully"(){
+    def "it should return all animes saved in data base successfully"() {
         given:
         Anime savedAnime0 = createAnime()
         Anime savedAnime1 = createAnime(2L, "Sailor Moon", 9.0)
@@ -104,7 +103,7 @@ class AnimeServiceTest extends Specification {
         assert listOfAnime.get(1) == savedAnime1
     }
 
-    def "it should return an emptyList when thre is no animes saved in data base"(){
+    def "it should return an emptyList when there is no animes saved in data base"() {
         when:
         List<Anime> listOfAnime = animeService.listAll()
 
@@ -148,7 +147,7 @@ class AnimeServiceTest extends Specification {
         assert exception.getMessage() == expectedMessage
     }
 
-    def "it should delete an anime that was saved in data base successfully"(){
+    def "it should delete an anime that was saved in data base successfully"() {
         given:
         Long id = 2L
         Anime savedAnime1 = createAnime(id, "Sailor Moon", 9.0)
@@ -161,7 +160,7 @@ class AnimeServiceTest extends Specification {
         assert ObjectUtils.isEmpty(listOfAnime)
     }
 
-    def "it should throw an BadRequestException when trying to delete an unexistent anime"(){
+    def "it should throw an BadRequestException when trying to delete an unexistent anime"() {
         given:
         Long id = 2L
         String expectedExceptionMessage = "Anime not found"
@@ -172,13 +171,13 @@ class AnimeServiceTest extends Specification {
         then:
         1 * animeRepository.findById(id) >> Optional.empty()
 
-        and: 'Assert that the exceptiion is being throw'
+        and: 'Assert that the exception is being throw'
         BadRequestException exception = thrown(BadRequestException)
         assert exception.getMessage() == expectedExceptionMessage
         assert ObjectUtils.isEmpty(listOfAnime)
     }
 
-    def "it should replace an previously added anime successfully"(){
+    def "it should replace an previously added anime successfully"() {
         given:
         Long id = 1L
         Anime savedAnime0 = createAnime()
@@ -193,7 +192,7 @@ class AnimeServiceTest extends Specification {
         assert ObjectUtils.isEmpty(listOfAnime)
     }
 
-    def "it should throw an error when trying to replace an unexistent anime"(){
+    def "it should throw an error when trying to replace an unexistent anime"() {
         given:
         String expectedExceptionMessage = "Anime not found"
         Long id = 1L
@@ -206,8 +205,28 @@ class AnimeServiceTest extends Specification {
         1 * animeRepository.findById(id) >> Optional.empty()
         assert ObjectUtils.isEmpty(listOfAnime)
 
-        and: 'Assert that the exceptiion is being throw'
+        and: 'Assert that the exception is being throw'
         BadRequestException exception = thrown(BadRequestException)
         assert exception.getMessage() == expectedExceptionMessage
+    }
+
+    def "it should return paged all animes saved in data base successfully"() {
+        given:
+        Anime savedAnime0 = createAnime()
+        Anime savedAnime1 = createAnime(2L, "Sailor Moon", 9.0)
+        def repositoryResponsePageZeroSizeTwo = new PageImpl<Anime>([savedAnime0, savedAnime1])
+        def page = PageRequest.of(0, 2)
+
+        when:
+        Page<Anime> animePage = animeService.list(page)
+
+        then:
+        1 * animeRepository.findAll(page) >> repositoryResponsePageZeroSizeTwo
+
+        and: 'validate the method return'
+        assert ObjectUtils.isNotEmpty(animePage)
+        assert animePage.getTotalElements() == 2L
+        assert animePage.toList().get(0) == savedAnime0
+        assert animePage.toList().get(1) == savedAnime1
     }
 }
