@@ -26,7 +26,7 @@ class DateUtilTest extends Specification {
         then:
         assert formattedLocalDateTime == "2018-06-01 17:00:00"
     }
-
+/*
     def "FLAKY TEST - It should convert LocalDateTime to data base style"() {
         given:
         LocalDateTime localDateTime = LocalDateTime.now()
@@ -38,4 +38,5 @@ class DateUtilTest extends Specification {
         // this test will only work in May 21th, 2022
         assert formattedDate == "2022-05-21"
     }
+ */
 }
