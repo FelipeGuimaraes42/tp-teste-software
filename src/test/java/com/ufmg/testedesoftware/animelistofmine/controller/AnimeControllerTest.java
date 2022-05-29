@@ -22,6 +22,7 @@ class AnimeControllerTest {
   @MockBean private AnimeService animeService;
 
   private static final String ENDPOINT_ANIMES = "/animes";
+  private static final String ENDPOINT_ANIMES_ALL = "/animes/all";
   private static final String ENDPOINT_ANIMES_BY_ID = "/animes/{id}";
   private static final String ENDPOINT_ANIMES_FIND = "/animes/find";
   private static final String APPLICATION_JSON = "application/json";
@@ -33,6 +34,11 @@ class AnimeControllerTest {
   @Test
   void itShouldTestTheGETEndpointAnimesSuccessfully() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_ANIMES)).andExpect(status().isOk());
+  }
+
+  @Test
+  void itShouldTestTheGETEndpointAnimesAllSuccessfully() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_ANIMES_ALL)).andExpect(status().isOk());
   }
 
   @Test
