@@ -25,6 +25,8 @@ class AnimeControllerTest {
   private static final String ENDPOINT_ANIMES_ALL = "/animes/all";
   private static final String ENDPOINT_ANIMES_BY_ID = "/animes/{id}";
   private static final String ENDPOINT_ANIMES_FIND = "/animes/find";
+  private static final String ENDPOINT_ANIMES_TOP = "/animes/top";
+  private static final String ENDPOINT_ANIMES_BAD = "/animes/bad";
   private static final String APPLICATION_JSON = "application/json";
   private static final String ANIME_NAME = "ODDTAXI";
   private static final Double MAX_SCORE = 10.0;
@@ -262,5 +264,15 @@ class AnimeControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.delete(ENDPOINT_ANIMES).contentType(APPLICATION_JSON))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void itShouldTestTheGETEndpointTopAnimesSuccessfully() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_ANIMES_TOP)).andExpect(status().isOk());
+  }
+
+  @Test
+  void itShouldTestTheGETEndpointBadAnimesSuccessfully() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_ANIMES_BAD)).andExpect(status().isOk());
   }
 }

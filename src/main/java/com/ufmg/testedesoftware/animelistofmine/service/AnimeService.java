@@ -1,11 +1,11 @@
 package com.ufmg.testedesoftware.animelistofmine.service;
 
-import com.ufmg.testedesoftware.animelistofmine.exception.BadRequestException;
-import com.ufmg.testedesoftware.animelistofmine.requests.AnimePutRequestBody;
 import com.ufmg.testedesoftware.animelistofmine.domain.Anime;
+import com.ufmg.testedesoftware.animelistofmine.exception.BadRequestException;
 import com.ufmg.testedesoftware.animelistofmine.mapper.AnimeMapper;
 import com.ufmg.testedesoftware.animelistofmine.repository.AnimeRepository;
 import com.ufmg.testedesoftware.animelistofmine.requests.AnimePostRequestBody;
+import com.ufmg.testedesoftware.animelistofmine.requests.AnimePutRequestBody;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,5 +56,13 @@ public class AnimeService {
     Anime anime = AnimeMapper.INSTANCE.toAnime(animePutRequestBody);
     anime.setId(savedAnime.getId());
     animeRepository.save(anime);
+  }
+
+  public List<Anime> getTopTen() {
+    return animeRepository.getTopTen();
+  }
+
+  public List<Anime> getBadTen() {
+    return animeRepository.getBadTen();
   }
 }

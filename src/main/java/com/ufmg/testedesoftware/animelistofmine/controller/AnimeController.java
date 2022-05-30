@@ -56,6 +56,16 @@ public class AnimeController {
     return ResponseEntity.ok(animeService.findByName(name));
   }
 
+  @GetMapping(path = "/top")
+  public ResponseEntity<List<Anime>> getTopTen() {
+    return ResponseEntity.ok(animeService.getTopTen());
+  }
+
+  @GetMapping(path = "/bad")
+  public ResponseEntity<List<Anime>> getBadTen() {
+    return ResponseEntity.ok(animeService.getBadTen());
+  }
+
   @PostMapping
   public ResponseEntity<Anime> save(@RequestBody @Valid AnimePostRequestBody animePostRequestBody) {
     return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);

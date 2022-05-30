@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest
 import spock.lang.Specification
 
 import static com.ufmg.testedesoftware.animelistofmine.mock.AnimeMock.createAnime
+import static com.ufmg.testedesoftware.animelistofmine.mock.AnimeMock.createOrderedAnimeList
 
 class AnimeServiceTest extends Specification {
     AnimeService animeService
@@ -160,7 +161,7 @@ class AnimeServiceTest extends Specification {
         assert ObjectUtils.isEmpty(listOfAnime)
     }
 
-    def "it should throw an BadRequestException when trying to delete an unexistent anime"() {
+    def "it should throw an BadRequestException when trying to delete an nonexistent anime"() {
         given:
         Long id = 2L
         String expectedExceptionMessage = "Anime not found"
@@ -192,7 +193,7 @@ class AnimeServiceTest extends Specification {
         assert ObjectUtils.isEmpty(listOfAnime)
     }
 
-    def "it should throw an error when trying to replace an unexistent anime"() {
+    def "it should throw an error when trying to replace an nonexistent anime"() {
         given:
         String expectedExceptionMessage = "Anime not found"
         Long id = 1L
@@ -290,5 +291,161 @@ class AnimeServiceTest extends Specification {
         assert ObjectUtils.isNotEmpty(animePage)
         assert animePage.getTotalElements() != databaseAnimes.size()
         assert animePage.getTotalElements() == 0L
+    }
+
+    def "it should return the top ten anime ordered by score successfully"() {
+        given:
+        def numberOfAnimesInDataBase = 10
+        def animes = createOrderedAnimeList(numberOfAnimesInDataBase, "desc")
+
+        when:
+        List<Anime> topTenAnimes = animeService.getTopTen()
+
+        then:
+        1 * animeRepository.getTopTen() >> animes
+
+        and:
+        assert ObjectUtils.isNotEmpty(topTenAnimes)
+        assert topTenAnimes.size() == 10
+        assert isScoreDescOrdered(topTenAnimes)
+    }
+
+    def "it should return ten anime ordered by score DESC when DB has more than 10 animes successfully"() {
+        given:
+        def numberOfAnimesInDataBase = 15
+        def animes = createOrderedAnimeList(numberOfAnimesInDataBase, "desc")
+        def tenAnimes = animes.subList(0, 10)
+
+        when:
+        List<Anime> topTenAnimes = animeService.getTopTen()
+
+        then:
+        1 * animeRepository.getTopTen() >> tenAnimes
+
+        and:
+        assert ObjectUtils.isNotEmpty(topTenAnimes)
+        assert topTenAnimes.size() == 10
+        assert isScoreDescOrdered(topTenAnimes)
+    }
+
+    def "it should return all animes ordered by score DESC when DB has less than 10 saved animes successfully"() {
+        given:
+        def numberOfAnimesInDataBase = 7
+        def animes = createOrderedAnimeList(numberOfAnimesInDataBase, "DESC")
+
+        when:
+        List<Anime> topTenAnimes = animeService.getTopTen()
+
+        then:
+        1 * animeRepository.getTopTen() >> animes
+
+        and:
+        assert ObjectUtils.isNotEmpty(topTenAnimes)
+        assert topTenAnimes.size() == numberOfAnimesInDataBase
+        assert isScoreDescOrdered(topTenAnimes)
+    }
+
+    def "it should return empty top list when DB has none saved anime successfully"() {
+        given:
+        def animes = Collections.emptyList()
+
+        when:
+        List<Anime> topTenAnimes = animeService.getTopTen()
+
+        then:
+        1 * animeRepository.getTopTen() >> animes
+
+        and:
+        assert ObjectUtils.isEmpty(topTenAnimes)
+    }
+
+    def "it should return the worst ten anime ordered by score successfully"() {
+        given:
+        def numberOfAnimesInDataBase = 10
+        def animes = createOrderedAnimeList(numberOfAnimesInDataBase, "asc")
+
+        when:
+        List<Anime> worstTenAnimes = animeService.getBadTen()
+
+        then:
+        1 * animeRepository.getBadTen() >> animes
+
+        and:
+        assert ObjectUtils.isNotEmpty(worstTenAnimes)
+        assert worstTenAnimes.size() == 10
+        assert isScoreAscOrdered(worstTenAnimes)
+    }
+
+    def "it should return ten anime ordered by score ASC when DB has more than 10 saved animes successfully"() {
+        given:
+        def numberOfAnimesInDataBase = 15
+        def animes = createOrderedAnimeList(numberOfAnimesInDataBase, "asc")
+        def tenAnimes = animes.subList(0, 10)
+
+        when:
+        List<Anime> worstTenAnimes = animeService.getBadTen()
+
+        then:
+        1 * animeRepository.getBadTen() >> tenAnimes
+
+        and:
+        assert ObjectUtils.isNotEmpty(worstTenAnimes)
+        assert worstTenAnimes.size() == 10
+        assert isScoreAscOrdered(worstTenAnimes)
+    }
+
+    def "it should return all animes ordered by score ASC when DB has less than 10 saved animes successfully"() {
+        given:
+        def numberOfAnimesInDataBase = 6
+        def animes = createOrderedAnimeList(numberOfAnimesInDataBase, "ASC")
+
+        when:
+        List<Anime> worstTenAnimes = animeService.getBadTen()
+
+        then:
+        1 * animeRepository.getBadTen() >> animes
+
+        and:
+        assert ObjectUtils.isNotEmpty(worstTenAnimes)
+        assert worstTenAnimes.size() == numberOfAnimesInDataBase
+        assert isScoreAscOrdered(worstTenAnimes)
+    }
+
+    def "it should return empty bad list when DB has none saved animes successfully"() {
+        given:
+        def animes = Collections.emptyList()
+
+        when:
+        List<Anime> worstTenAnime = animeService.getBadTen()
+
+        then:
+        1 * animeRepository.getBadTen() >> animes
+
+        and:
+        assert ObjectUtils.isEmpty(worstTenAnime)
+    }
+
+    private static boolean isScoreDescOrdered(List<Anime> animes) {
+        boolean isOrdered = true
+        Anime position = animes.get(0)
+
+        for (Anime anime : animes) {
+            isOrdered = anime.getScore() <= position.getScore() && isOrdered
+            position = anime
+        }
+
+        return isOrdered
+    }
+
+    private static boolean isScoreAscOrdered(List<Anime> animes) {
+        boolean isOrdered = true
+        Anime position = animes.get(0)
+
+        for (Anime anime : animes) {
+            isOrdered = anime.getScore() >= position.getScore() && isOrdered
+            position = anime
+        }
+
+        return isOrdered
     }
 }
