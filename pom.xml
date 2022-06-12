@@ -24,7 +24,7 @@
     <spock-core.version>${spock-spring.version}</spock-core.version>
     <spock-spring.version>2.1-groovy-3.0</spock-spring.version>
     <gmavenplus-plugin.version>1.13.0</gmavenplus-plugin.version>
-    <jacoco-maven-plugin.minimum>1.00</jacoco-maven-plugin.minimum>
+    <jacoco-maven-plugin.minimum>0.00</jacoco-maven-plugin.minimum>
   </properties>
 
   <dependencies>
