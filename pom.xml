@@ -170,17 +170,6 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.7</version>
-        <configuration>
-          <excludes>
-            <exclude>**/AnimeListOfMineApplication.class</exclude>
-            <exclude>**/client/**/*</exclude>
-            <exclude>**/configurer/**/*</exclude>
-            <exclude>**/domain/**/*</exclude>
-            <exclude>**/exception/**/*</exclude>
-            <exclude>**/handler/**/*</exclude>
-            <exclude>**/requests/**/*</exclude>
-          </excludes>
-        </configuration>
         <executions>
           <execution>
             <id>agent</id>
@@ -204,9 +193,6 @@
               <rules>
                 <rule>
                   <element>CLASS</element>
-                  <excludes>
-                    <exclude>**/AnimeListOfMineApplication.class</exclude>
-                  </excludes>
                   <limits>
                     <limit>
                       <counter>LINE</counter>
