@@ -44,7 +44,8 @@ public class AnimeService {
     if (animePostRequestBody == null) {
       throw new BadRequestException("Post Request Body cannot be null");
     }
-    return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
+    return animeRepository.save(
+        AnimeMapper.INSTANCE.fromAnimePostRequestBodyToAnime(animePostRequestBody));
   }
 
   public void delete(long id) {
@@ -53,7 +54,7 @@ public class AnimeService {
 
   public void replace(AnimePutRequestBody animePutRequestBody) {
     Anime savedAnime = findByIdOrThrowBadRequestException(animePutRequestBody.getId());
-    Anime anime = AnimeMapper.INSTANCE.toAnime(animePutRequestBody);
+    Anime anime = AnimeMapper.INSTANCE.fromAnimePutRequestBodyToAnime(animePutRequestBody);
     anime.setId(savedAnime.getId());
     animeRepository.save(anime);
   }

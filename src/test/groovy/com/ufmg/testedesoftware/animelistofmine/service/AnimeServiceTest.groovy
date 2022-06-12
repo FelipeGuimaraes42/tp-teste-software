@@ -32,7 +32,7 @@ class AnimeServiceTest extends Specification {
         Anime anime = animeService.save(animePostRequestBody)
 
         then:
-        1 * animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody)) >> savedAnime0
+        1 * animeRepository.save(AnimeMapper.INSTANCE.fromAnimePostRequestBodyToAnime(animePostRequestBody)) >> savedAnime0
 
         and: 'validate anime value and the return method'
         assert ObjectUtils.isNotEmpty(anime)
@@ -189,7 +189,7 @@ class AnimeServiceTest extends Specification {
 
         then:
         1 * animeRepository.findById(id) >> Optional.of(savedAnime0)
-        1 * animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePutRequestBody)) >> savedAnime0
+        1 * animeRepository.save(AnimeMapper.INSTANCE.fromAnimePutRequestBodyToAnime(animePutRequestBody)) >> savedAnime0
         assert ObjectUtils.isEmpty(listOfAnime)
     }
 
