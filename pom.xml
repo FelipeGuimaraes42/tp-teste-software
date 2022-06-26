@@ -179,6 +179,7 @@
         <configuration>
           <excludes>
             <exclude>**/AnimeListOfMineApplication.class</exclude>
+            <exclude>**/wrapper/**/*</exclude>
             <exclude>**/client/**/*</exclude>
             <exclude>**/configurer/**/*</exclude>
             <exclude>**/domain/**/*</exclude>
