@@ -32,6 +32,7 @@ Os testes foram desenvolvidos usando dois frameworks:
 ## Codecov
 
 **Link**: [Codecov](https://app.codecov.io/gh/FelipeGuimaraes42/tp-teste-software)
+
 **Link**: [Codecov without class exclusions](https://app.codecov.io/gh/FelipeGuimaraes42/tp-teste-software/branch/test%2Fremove-jacoco-exclusions)
 
 ## PIT
