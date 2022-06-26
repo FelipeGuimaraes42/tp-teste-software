@@ -32,3 +32,26 @@ Os testes foram desenvolvidos usando dois frameworks:
 ## Codecov
 
 **Link**: [Codecov](https://app.codecov.io/gh/FelipeGuimaraes42/tp-teste-software)
+
+## PIT
+
+Para rodar os testes de mutação do sistema, primeiro você precisa limpar a pasta target e verificar
+a corretude da bateria de testes com o comando:
+
+```
+mvn clean test
+```
+
+Após, rode o pitest
+
+```
+mvn test-compile org.pitest:pitest-maven:mutationCoverage
+```
+
+Após terminar de rodar as mutações e os testes, irá gerar uma nova pasta no seguinte caminho:
+
+```
+tp-teste-software/target/pit-reports
+```
+
+Abrindo essa pasta, o report será o *index.html*. Abra-o em seu navegador para vê-lo estilizado.
