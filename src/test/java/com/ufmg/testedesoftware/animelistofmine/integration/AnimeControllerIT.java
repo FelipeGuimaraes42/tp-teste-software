@@ -1,7 +1,5 @@
 package com.ufmg.testedesoftware.animelistofmine.integration;
 
-import static com.ufmg.testedesoftware.animelistofmine.mock.AnimeMock.createAnime;
-
 import com.ufmg.testedesoftware.animelistofmine.domain.Anime;
 import com.ufmg.testedesoftware.animelistofmine.repository.AnimeRepository;
 import com.ufmg.testedesoftware.animelistofmine.wrapper.PageableResponse;
@@ -15,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
@@ -31,7 +27,7 @@ class AnimeControllerIT {
   @Test
   @DisplayName("integrated test - list returns list of anime inside page object when successful")
   void itShouldReturnListOfAnimeInsidePageObjectWhenSuccessful() {
-    Anime savedAnime = animeRepository.save(createAnime());
+    Anime savedAnime = animeRepository.save(new Anime(1L, "Dragon Ball Z", 9.0));
 
     String expectedName = savedAnime.getName();
 
@@ -53,8 +49,8 @@ class AnimeControllerIT {
   @Test
   @DisplayName("integrated test - listAll should return full list of animes in database")
   void itShouldListAllAnimeSavedInDBSuccessfully() {
-    Anime savedAnime0 = animeRepository.save(createAnime());
-    Anime savedAnime1 = animeRepository.save(createAnime(2L, "Spy x Family", 9.0));
+    Anime savedAnime0 = animeRepository.save(new Anime(1L, "Dragon Ball Z", 9.0));
+    Anime savedAnime1 = animeRepository.save(new Anime(2L, "Spy x Family", 9.0));
 
     String expectedName0 = savedAnime0.getName();
     String expectedName1 = savedAnime1.getName();
@@ -84,7 +80,7 @@ class AnimeControllerIT {
   @Test
   @DisplayName("integrated test - finding anime by id")
   void itShouldFindAnimeByIdInDBSuccessfully() {
-    Anime savedAnime = animeRepository.save(createAnime());
+    Anime savedAnime = animeRepository.save(new Anime(1L, "Dragon Ball Z", 9.0));
 
     Long expectedId = savedAnime.getId();
 
@@ -98,7 +94,7 @@ class AnimeControllerIT {
   @Test
   @DisplayName("integrated test - finding anime by its name")
   void itShouldFindAnimeByNameInDBSuccessfully() {
-    Anime savedAnime = animeRepository.save(createAnime(1L, "Oddtaxi", 9.5));
+    Anime savedAnime = animeRepository.save(new Anime(1L, "Oddtaxi", 9.5));
 
     String expectedName = savedAnime.getName();
     String url = String.format("/animes/find/?name=%s", expectedName);
@@ -121,7 +117,7 @@ class AnimeControllerIT {
   @Test
   @DisplayName("integrated test - returns an empty list if anime name is not found")
   void itShouldNotFindAnimeInDB() {
-    String url = String.format("/animes/find/?name=%s", "Dragon Ball Super");
+    String url = String.format("/animes/find/?name=%s", "Sailor Moon");
 
     List<Anime> animes =
         testRestTemplate
