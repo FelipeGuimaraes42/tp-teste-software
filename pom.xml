@@ -238,17 +238,18 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <dependencies>
-          <!--          <dependency>-->
-          <!--            <groupId>org.apache.maven.surefire</groupId>-->
-          <!--            <artifactId>surefire-junit47</artifactId>-->
-          <!--            <version>${maven-surefire-plugin.version}</version>-->
-          <!--          </dependency>-->
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
             <artifactId>surefire-junit-platform</artifactId>
             <version>${maven-surefire-plugin.version}</version>
           </dependency>
         </dependencies>
+        <configuration>
+          <includes>
+            <include>**/*Test.*</include>
+            <include>**/AnimeControllerIT.java</include>
+          </includes>
+        </configuration>
         <executions>
           <execution>
             <id>default-test</id>
